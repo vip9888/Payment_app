@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_payment_app/component/colors.dart';
+import 'package:flutter_payment_app/widgets/buttons.dart';
+import 'package:flutter_payment_app/widgets/large_buttons.dart';
 import 'package:flutter_payment_app/widgets/text_size.dart';
 
 class MyHomepage extends StatefulWidget {
@@ -25,6 +27,7 @@ class _MyHomepageState extends State<MyHomepage> {
           children: [
             _headSection(),
             _listBills(),
+            _payButton(),
           ],
         ),
       ),
@@ -39,8 +42,40 @@ class _MyHomepageState extends State<MyHomepage> {
           _mainBackground(),
           _curveImageContainer(),
           _buttonContainer(),
+          _textContainer(),
         ],
       ),
+    );
+  }
+
+  _textContainer() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          top: 65,
+          child: Text(
+            "My Bills",
+            style: TextStyle(
+              fontSize: 70,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF293952),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 40,
+          top: 50,
+          child: Text(
+            "My Bills",
+            style: TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -48,18 +83,90 @@ class _MyHomepageState extends State<MyHomepage> {
     return Positioned(
       bottom: 17,
       right: 48,
-      child: Container(
-        height: 60,
-        width: 60,
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage("images/lines.png")),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 15,
-              offset: Offset(0, 1),
-              color: Color(0xFF11324d).withOpacity(0.2),
-            )
-          ],
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet<dynamic>(
+              isScrollControlled: true,
+              barrierColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (BuildContext bc) {
+                return Container(
+                  height: MediaQuery.of(context).size.height - 130,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          color: Color(0xFFeef1f4).withOpacity(0.7),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 205,
+                        ),
+                      ),
+                      Positioned(
+                        right: 49,
+                        top: 7,
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                            bottom: 15,
+                          ),
+                          width: 60,
+                          height: 250,
+                          decoration: BoxDecoration(
+                            color: AppColor.mainColor,
+                            borderRadius: BorderRadius.circular(29),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppButtons(
+                                icon: Icons.cancel,
+                                backgroundColor: Colors.white,
+                                iconColor: AppColor.mainColor,
+                                textColor: Colors.white,
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              AppButtons(
+                                icon: Icons.add,
+                                backgroundColor: Colors.white,
+                                iconColor: AppColor.mainColor,
+                                textColor: Colors.white,
+                                onTap: () {},
+                                text: "Add Bills",
+                              ),
+                              AppButtons(
+                                icon: Icons.history,
+                                backgroundColor: Colors.white,
+                                iconColor: AppColor.mainColor,
+                                textColor: Colors.white,
+                                onTap: () {},
+                                text: "History",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+        },
+        child: Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("images/lines.png")),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 15,
+                offset: Offset(0, 1),
+                color: Color(0xFF11324d).withOpacity(0.2),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -258,6 +365,16 @@ class _MyHomepageState extends State<MyHomepage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  _payButton() {
+    return Positioned(
+      bottom: 7,
+      child: AppLargeButton(
+        text: "Pay All Bills",
+        textColor: Colors.white,
       ),
     );
   }
