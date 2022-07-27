@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_payment_app/component/colors.dart';
+import 'package:flutter_payment_app/controllers/data_controllers.dart';
 import 'package:flutter_payment_app/pages/payment_page.dart';
 import 'package:flutter_payment_app/widgets/buttons.dart';
 import 'package:flutter_payment_app/widgets/large_buttons.dart';
@@ -12,14 +13,15 @@ import 'package:get/get_core/src/get_main.dart';
 
 class MyHomepage extends StatefulWidget {
   const MyHomepage({Key? key}) : super(key: key);
-
   @override
   State<MyHomepage> createState() => _MyHomepageState();
 }
 
 class _MyHomepageState extends State<MyHomepage> {
+  final DataController _controller = Get.put(DataController());
   @override
   Widget build(BuildContext context) {
+    // print(_controller.list);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -29,7 +31,18 @@ class _MyHomepageState extends State<MyHomepage> {
         child: Stack(
           children: [
             _headSection(),
-            _listBills(),
+            Obx(() {
+              if (_controller.loading == false) {
+                return Center(
+                  child: Container(
+                      height: 90,
+                      width: 90,
+                      child: CircularProgressIndicator()),
+                );
+              } else {
+                return _listBills();
+              }
+            }),
             _payButton(),
           ],
         ),
@@ -219,7 +232,7 @@ class _MyHomepageState extends State<MyHomepage> {
         removeTop: true,
         context: context,
         child: ListView.builder(
-          itemCount: 3,
+          itemCount: _controller.list.length,
           itemBuilder: (_, index) {
             return Container(
               margin: const EdgeInsets.only(
@@ -248,6 +261,7 @@ class _MyHomepageState extends State<MyHomepage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -263,7 +277,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: AssetImage(
-                                    "images/brand1.png",
+                                    _controller.list[index]["img"],
                                   ),
                                 ),
                               ),
@@ -275,7 +289,7 @@ class _MyHomepageState extends State<MyHomepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "KenGen Power",
+                                  _controller.list[index]["brand"],
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: AppColor.mainColor,
@@ -301,7 +315,7 @@ class _MyHomepageState extends State<MyHomepage> {
                           height: 12,
                         ),
                         SizedText(
-                            text: "Auto Pay on 24th May 18",
+                            text: _controller.list[index]["more"],
                             color: AppColor.green),
                       ],
                     ),
@@ -310,26 +324,41 @@ class _MyHomepageState extends State<MyHomepage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 80,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: AppColor.selectBackground,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Select",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.selectColor,
+                            GestureDetector(
+                              onTap: () {
+                                _controller.list[index]["status"] =
+                                    !_controller.list[index]["status"];
+                                _controller.list.refresh();
+                                print(_controller.newList.length);
+                              },
+                              child: Container(
+                                width: 80,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color:
+                                      _controller.list[index]["status"] == false
+                                          ? AppColor.selectBackground
+                                          : AppColor.green,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Select",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: _controller.list[index]
+                                                  ["status"] ==
+                                              false
+                                          ? AppColor.selectColor
+                                          : Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             Expanded(child: Container()),
                             Text(
-                              "\$1248.00",
+                              "\$" + _controller.list[index]["due"],
                               style: TextStyle(
                                 fontSize: 18,
                                 color: AppColor.mainColor,
