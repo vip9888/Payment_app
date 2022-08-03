@@ -277,7 +277,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: AssetImage(
-                                    _controller.list[index]["img"],
+                                    _controller.list[index]["brand_logo"],
                                   ),
                                 ),
                               ),
@@ -289,7 +289,7 @@ class _MyHomepageState extends State<MyHomepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _controller.list[index]["brand"],
+                                  _controller.list[index]["brand_name"],
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: AppColor.mainColor,
@@ -300,7 +300,9 @@ class _MyHomepageState extends State<MyHomepage> {
                                   height: 10,
                                 ),
                                 Text(
-                                  "ID:846594",
+                                  "ID:" +
+                                      _controller.list[index]["brand_id"]
+                                          .toString(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: AppColor.idColor,
@@ -315,7 +317,7 @@ class _MyHomepageState extends State<MyHomepage> {
                           height: 12,
                         ),
                         SizedText(
-                            text: _controller.list[index]["more"],
+                            text: _controller.list[index]["due_info"],
                             color: AppColor.green),
                       ],
                     ),
@@ -329,7 +331,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 _controller.list[index]["status"] =
                                     !_controller.list[index]["status"];
                                 _controller.list.refresh();
-                                print(_controller.newList.length);
+                                // print(_controller.newList.length);
                               },
                               child: Container(
                                 width: 80,
@@ -358,7 +360,7 @@ class _MyHomepageState extends State<MyHomepage> {
                             ),
                             Expanded(child: Container()),
                             Text(
-                              "\$" + _controller.list[index]["due"],
+                              "\$" + _controller.list[index]["due"].toString(),
                               style: TextStyle(
                                 fontSize: 18,
                                 color: AppColor.mainColor,
