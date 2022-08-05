@@ -1,9 +1,10 @@
+import 'package:flutter_payment_app/model/data_model.dart';
 import 'package:get/get.dart';
 
 import '../services/data_services.dart';
 
 class DataController extends GetxController {
-  var list = [].obs;
+  RxList<DataModel> list = <DataModel>[].obs;
   final services = new DataServices();
   var _loading = false.obs;
 
@@ -21,7 +22,10 @@ class DataController extends GetxController {
   }
 
   get newList {
-    return list.where((e) => e["status"]).map((e) => e).toList();
+    return list
+        .where((e) => e.status == 0 ? false : true)
+        .map((e) => e)
+        .toList();
   }
 
   _loadData() async {

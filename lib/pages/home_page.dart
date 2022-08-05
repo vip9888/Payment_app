@@ -277,7 +277,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: AssetImage(
-                                    _controller.list[index]["brand_logo"],
+                                    _controller.list[index].brand_logo,
                                   ),
                                 ),
                               ),
@@ -289,7 +289,7 @@ class _MyHomepageState extends State<MyHomepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _controller.list[index]["brand_name"],
+                                  _controller.list[index].brand_name,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: AppColor.mainColor,
@@ -301,7 +301,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 ),
                                 Text(
                                   "ID:" +
-                                      _controller.list[index]["brand_id"]
+                                      _controller.list[index].brand_id
                                           .toString(),
                                   style: TextStyle(
                                     fontSize: 16,
@@ -317,7 +317,7 @@ class _MyHomepageState extends State<MyHomepage> {
                           height: 12,
                         ),
                         SizedText(
-                            text: _controller.list[index]["due_info"],
+                            text: _controller.list[index].due_info,
                             color: AppColor.green),
                       ],
                     ),
@@ -328,8 +328,13 @@ class _MyHomepageState extends State<MyHomepage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                _controller.list[index]["status"] =
-                                    !_controller.list[index]["status"];
+                                if (_controller.list[index].status == 0) {
+                                  _controller.list[index].status = 1;
+                                } else if (_controller.list[index].status ==
+                                    1) {
+                                  _controller.list[index].status = 0;
+                                }
+
                                 _controller.list.refresh();
                                 // print(_controller.newList.length);
                               },
@@ -338,19 +343,16 @@ class _MyHomepageState extends State<MyHomepage> {
                                 height: 30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color:
-                                      _controller.list[index]["status"] == false
-                                          ? AppColor.selectBackground
-                                          : AppColor.green,
+                                  color: _controller.list[index].status == 0
+                                      ? AppColor.selectBackground
+                                      : AppColor.green,
                                 ),
                                 child: Center(
                                   child: Text(
                                     "Select",
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: _controller.list[index]
-                                                  ["status"] ==
-                                              false
+                                      color: _controller.list[index].status == 0
                                           ? AppColor.selectColor
                                           : Colors.white,
                                     ),
@@ -360,7 +362,7 @@ class _MyHomepageState extends State<MyHomepage> {
                             ),
                             Expanded(child: Container()),
                             Text(
-                              "\$" + _controller.list[index]["due"].toString(),
+                              "\$" + _controller.list[index].due.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                                 color: AppColor.mainColor,

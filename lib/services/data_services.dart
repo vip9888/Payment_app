@@ -3,12 +3,14 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../model/data_model.dart';
+
 class DataServices {
   String _baseUrl = 'http://10.0.2.2:8000/api';
 
   // get http => null;
 
-  Future<List<dynamic>> getUsers() async {
+  Future<List<DataModel>> getUsers() async {
     var apiUrl = '/payment';
 
     http.Response res = await http.get(Uri.parse(_baseUrl + apiUrl));
@@ -17,15 +19,15 @@ class DataServices {
       if (res.statusCode == 200) {
         List<dynamic> list = await json.decode(res.body);
         print(list);
-        return list.map((e) => e).toList();
+        return list.map((e) => DataModel.fromJson(e)).toList();
       } else {
         print("Something went wrong");
-        return [];
+        return <DataModel>[];
       }
     } catch (e) {
       print(e);
       print("Api request failed");
-      return [];
+      return <DataModel>[];
     }
 
     // var info = rootBundle.loadString("json/data.json");
